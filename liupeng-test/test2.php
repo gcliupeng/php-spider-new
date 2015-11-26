@@ -43,6 +43,7 @@ pcntl_signal(SIGQUIT,SIG_IGN);
 
 $start = microtime(true);
 
+
 require __DIR__ . '/../vendor/autoload.php';
 
 // The URI we want to start crawling with
