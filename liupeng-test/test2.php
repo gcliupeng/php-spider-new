@@ -21,27 +21,30 @@ use Guzzle\Plugin\Log\LogPlugin;
 use Guzzle\Log\MonologLogAdapter;
 use Doctrine\Common\Cache\PhpFileCache;
 use VDB\Spider\Discoverer\CssSelectorDiscoverer;
+$start = microtime(true);
 function handleSignal($signal)
     {
         switch ($signal) {
-            case SIGTERM:echo 1;break;
-            case SIGKILL:echo 2;break;
-            case SIGINT: echo "press sigint";break;
+            case SIGTERM:
+            case SIGKILL:
+            case SIGINT: 
             case SIGQUIT:
-                echo "\n\nCAUGHT SIGNAL. TERMINATING\n\n";
+            case SIGUSR2:
+                //echo "\n\nCAUGHT SIGNAL. TERMINATING\n\n";
+                global $start;
+                $peakMem = round(memory_get_peak_usage(true) / 1024 / 1024, 2);
+                $totalTime = round(microtime(true) - $start, 2);
+                file_put_contents("status.txt", "\n  PEAK MEM USAGE:       " . $peakMem . 'MB'." TOTAL TIME:           " . $totalTime . 's'."\n",FILE_APPEND);
                 return;
-                //echo $this->statsHandler->toString();
-                //exit();
         }
     }
 declare(ticks = 1);
-// pcntl_signal_dispatch();
-pcntl_signal(SIGTERM,SIG_IGN);
-pcntl_signal(SIGINT,SIG_IGN);
-pcntl_signal(SIGHUP,SIG_IGN);
-pcntl_signal(SIGQUIT,SIG_IGN);
+pcntl_signal(SIGTERM,'handleSignal',FALSE);
+pcntl_signal(SIGINT,'handleSignal',FALSE);
+pcntl_signal(SIGHUP,'handleSignal',FALSE);
+pcntl_signal(SIGQUIT,'handleSignal',FALSE);
+pcntl_signal(SIGUSR2,'handleSignal',FALSE);
 
-$start = microtime(true);
 
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -96,7 +99,6 @@ $spider->getDispatcher()->addListener(
 $guzzleClient = $spider->getRequestHandler()->getClient();
 // Set the user agent
 $guzzleClient->setUserAgent('PHP-Spider');
-
 // Execute the crawl
 $result = $spider->crawl();
 
@@ -107,17 +109,17 @@ $queued = $stats->getQueued();
 $filtered = $stats->getFiltered();
 $failed = $stats->getFailed();
 
-echo "\n\nSPIDER ID: " . $spiderId;
-echo "\n  ENQUEUED:  " . count($queued);
-echo "\n  SKIPPED:   " . count($filtered);
-echo "\n  FAILED:    " . count($failed);
+// echo "\n\nSPIDER ID: " . $spiderId;
+// echo "\n  ENQUEUED:  " . count($queued);
+// echo "\n  SKIPPED:   " . count($filtered);
+// echo "\n  FAILED:    " . count($failed);
 
-register_shutdown_function(function (){
-    global $start;
-$peakMem = round(memory_get_peak_usage(true) / 1024 / 1024, 2);
-$totalTime = round(microtime(true) - $start, 2);
-file_put_contents("status.txt", "\n  PEAK MEM USAGE:       " . $peakMem . 'MB'."\n  TOTAL TIME:           " . $totalTime . 's');
-});
+// register_shutdown_function(function (){
+//     global $start;
+// $peakMem = round(memory_get_peak_usage(true) / 1024 / 1024, 2);
+// $totalTime = round(microtime(true) - $start, 2);
+// file_put_contents("status.txt", "\n  PEAK MEM USAGE:       " . $peakMem . 'MB'."\n  TOTAL TIME:           " . $totalTime . 's');
+// });
 //With the information from some of plugins and listeners, we can determine some metrics
 
 

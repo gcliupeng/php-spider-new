@@ -1,0 +1,20 @@
+
+  PEAK MEM USAGE:       12.5MB TOTAL TIME:           13.54s
+
+  PEAK MEM USAGE:       19.25MB TOTAL TIME:           23.97s
+
+  PEAK MEM USAGE:       22.25MB TOTAL TIME:           37.29s
+
+  PEAK MEM USAGE:       22.25MB TOTAL TIME:           38.31s
+
+  PEAK MEM USAGE:       24MB TOTAL TIME:           38.8s
+
+  PEAK MEM USAGE:       24MB TOTAL TIME:           39.14s
+
+  PEAK MEM USAGE:       35.25MB TOTAL TIME:           225s
+
+  PEAK MEM USAGE:       36.75MB TOTAL TIME:           274.8s
+
+  PEAK MEM USAGE:       40.75MB TOTAL TIME:           323.75s
+
+  PEAK MEM USAGE:       42.25MB TOTAL TIME:           383.77s
